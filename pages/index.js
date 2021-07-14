@@ -22,15 +22,38 @@ function ProfileSidebar(propriedades) {
   )
 }
 
+function ProfileRelationsBox(propriedades) {
+  return (
+    <ProfileRelationsBoxWrapper>
+      <h2 className="smallTitle">
+        {propriedades.title} ({propriedades.items.length})
+      </h2>
+      <ul>
+        {/* {seguidores.map((itemAtual) => {
+          return (
+            <li key={itemAtual}>
+              <a href={`https://github.com/${itemAtual}.png`}>
+                <img src={itemAtual.image} />
+                <span>{itemAtual.title}</span>
+              </a>
+            </li>
+          )
+        })} */}
+      </ul>
+    </ProfileRelationsBoxWrapper>
+  )
+}
+
 export default function Home() {
-  const usuarioAleatorio = "weslleyfratini";
+  const usuarioAleatorio = 'weslleyfratini';
   const [comunidades, setComunidades] = React.useState([{
     id: '12802378123789378912789789123896123', 
     title: 'Eu odeio acordar cedo',
     image: 'https://alurakut.vercel.app/capa-comunidade-01.jpg'
   }]);
-  
-  
+  // const comunidades = comunidades[0];
+  // const alteradorDeComunidades/setComunidades = comunidades[1];
+  // const comunidades = ['Alurakut'];
   const pessoasFavoritas = [
     "rntvicente",
     "fabiofontesx",
@@ -38,6 +61,23 @@ export default function Home() {
     "JIFerreiraMinu",
     "weslleyfratini",
   ];
+  const [seguidores, setSeguidores] = React.useState([]);
+  // 0 - Pegar o array de dados do github 
+  React.useEffect(function() {
+    fetch('https://api.github.com/users/weslleyfratini/followers')
+    .then(function (respostaDoServidor) {
+      return respostaDoServidor.json();
+    })
+    .then(function(respostaCompleta) {
+      setSeguidores(respostaCompleta);
+    })
+  }, [])
+
+  console.log('seguidores antes do return', seguidores);
+
+  // 1 - Criar um box que vai ter um map, baseado nos items do array
+  // que pegamos do GitHub
+
   return (
     <>
       <AlurakutMenu />
@@ -95,6 +135,7 @@ export default function Home() {
           </Box>
         </div>
         <div className="profileRelationsArea" style={{ gridArea: 'profileRelationsArea' }}>
+          <ProfileRelationsBox title="Seguidores" items={seguidores} />
           <ProfileRelationsBoxWrapper>
             <h2 className="smallTitle">
               Comunidades ({comunidades.length})
